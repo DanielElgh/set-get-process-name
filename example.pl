@@ -26,7 +26,7 @@ sub setProcessName {
     my $newName = $_[0] // die("setProcessName: Argument missing\n");
     my $name = sprintf("%.*s\0", (TASK_COMM_LEN - 1), $newName);
     local $! = 0;
-    if(syscall(PRCTL, PR_SET_NAME, $name, 0, 0, 0)) {
+    if (syscall(PRCTL, PR_SET_NAME, $name, 0, 0, 0)) {
         die("setProcessName: syscall() failed with errno: $!\n");
     }
     return $name;
@@ -36,7 +36,7 @@ sub getProcessName {
     my $mem = "\0" x (TASK_COMM_LEN + 1);
     my $ptr = unpack('L', pack('P', $mem));
     local $! = 0;
-    if(syscall(PRCTL, PR_GET_NAME, $ptr, 0, 0, 0)) {
+    if (syscall(PRCTL, PR_GET_NAME, $ptr, 0, 0, 0)) {
         die("getProcessName: syscall() failed with errno: $!\n");
     }
     return unpack('Z*', $mem);
